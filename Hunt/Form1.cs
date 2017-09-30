@@ -31,6 +31,9 @@ namespace Hunt
 
         void InitializeMaze()
         {
+            lbHoundPosition.Text = string.Format("[{0},{1}]", houndX, houndY);
+            lbPreyPosition.Text = string.Format("[{0},{1}]", iPreyX, iPreyY);
+
             ListLines = new List<string[]>();
             string executableLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string xslLocation = Path.Combine(executableLocation, "Hound Maze(tsv).txt");
@@ -80,13 +83,41 @@ namespace Hunt
             if (iSolvedMaze != null)
             {
                 maze2DArray = iSolvedMaze;
-                //this.lblPath.Text = "" + iSelectedY + "," + iSelectedX + " to " + iY + "," + iX;
+                for (int i = 0; i < rowLenght; i++)
+                    for (int j = 0; j < colLenght; j++)
+                    {
+                        if (maze2DArray[i, j] == 100)
+                        {
+                            txtSolutionPath.Text += string.Format("[{0},{1}] ",j,i);
+                        }
+                    }
             }
-            else
-            {
+        }
 
+        private void pcMaze_MouseMove(object sender, MouseEventArgs e)
+        {
+            int iY = e.Y / cellSize;
+            int iX = e.X / cellSize;
+            if (iX < colLenght && iX >= 0 && iY < rowLenght && iY >= 0)
+            {
+                this.lbCurrentPosition.Text = string.Format("X: {0}, Y: {1}", iX, iY);
             }
-                //this.lblPath.Text = "No Path Found";
+        }
+
+        public static IEnumerable<T[]> Filter<T>(T[,] source, Func<T[], bool> predicate)
+        {
+            for (int i = 0; i < source.GetLength(0); ++i)
+            {
+                T[] values = new T[source.GetLength(1)];
+                for (int j = 0; j < values.Length; ++j)
+                {
+                    values[j] = source[i, j];
+                }
+                if (predicate(values))
+                {
+                    yield return values;
+                }
+            }
         }
 
         private void pcMaze_Paint(object sender, PaintEventArgs e)
