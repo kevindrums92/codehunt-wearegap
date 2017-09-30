@@ -88,7 +88,7 @@ namespace Hunt
                     {
                         if (maze2DArray[i, j] == 100)
                         {
-                            txtSolutionPath.Text += string.Format("[{0},{1}] ",j,i);
+                            txtSolutionPath.Text += string.Format("[{0},{1}], ",j,i);
                         }
                     }
             }
